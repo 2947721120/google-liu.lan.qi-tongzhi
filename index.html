@@ -11,7 +11,7 @@
 function notifyMe() {
   var title = "关闭当前网页不会消失";
   var options = {
-      body: "http://img.sobot.com/chatres/common/face/admin.png",
+      body: "这是一个桌面通知",
       icon: "http://img.sobot.com/chatres/common/face/admin.png"
   };
   // 让我们来看看浏览器是否支持通知
@@ -25,7 +25,7 @@ function notifyMe() {
     notification.onshow = function() {
                 setTimeout(function() {
                     notification.close();
-                }, max);
+                }, 6000);
             };
   }
   // 否则，我们需要问的权限的用户
