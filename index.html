@@ -28,7 +28,7 @@ function notifyMe() {
                 }, 6000);
             };
   }
-  // 否则，我们需要问的权限的用户
+  // 否则,我们需要问的权限的用户
   else if (Notification.permission !== 'denied') {
     Notification.requestPermission(function (permission) {
       // 如果用户接受，让我们创建一个通知
