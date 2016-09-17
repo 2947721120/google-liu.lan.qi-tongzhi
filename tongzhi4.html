@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>electron-notification-shim demo 4</title>
+	</head>
+	<body>
+		<h4>Hi =)</h4>
+		<p>只需发送一个通知事件的主要过程，谁就会另一个事件发回给我们。你应该看到的alert() 弹窗.</p>
+
+		<button class="notificationButton">发送本地通知事件</button>
+
+		<script>
+			'use strict';
+			const btn = document.querySelector('.notificationButton');
+			const originalTitle = document.title;
+			let unreadNotifications = 0;
+
+			console.log('Notifications will get intercepted by `electron-notification-shim` and create a new event (`notification-shim`) that gets sent to your main thread. In this demo the event handler in the main thread responds by sending a new event (`notification-shim-demo-event`) back to us, where we catch it and update an unread message counter in the document title. When the user comes back to this window, the counter is reset. A common scenario would be clicking the notification box and getting the window autofocused. To try it: click the button then quickly switch to another application so this demo window looses focus, then click the notification toaster and this window should get focused again.');
+
+			btn.addEventListener('click', () => {
+				// 不要在这里更新通知计数，因为如果聚焦窗口等允许的事件采取行动，他们应该，而是反应，你回来的事件通知实际上并未发送。
+				new Notification('Hello!', {content: 'Notification world!'});
+			});
+
+			const ipc = require('electron').ipcRenderer;
+			ipc.on('notification-shim-demo-event', () => {
+				// 在这里做更新通知算的，所以通知事件自然就可以办理。如果窗口集中，或者用户关闭通知等.
+				console.log('got notification shim event');
+				unreadNotifications++;
+				document.title = `(${unreadNotifications}) ${originalTitle}`;
+			});
+			ipc.on('notifications-shim-demo-focus-event', () => {
+				console.log('got focus event');
+				unreadNotifications = 0;
+				document.title = originalTitle;
+			});
+		</script>
+	</body>
+</html>
